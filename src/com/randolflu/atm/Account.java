@@ -1,5 +1,7 @@
 package com.randolflu.atm;
 
+import java.time.LocalDate;
+
 public class Account {
     //  卡号
     private String id;
@@ -19,8 +21,12 @@ public class Account {
     private String addr;
     //  身份证号码
     private String identity;
-    //  限额
-    private double limit;
+    //  每日最大限额
+    private double limit = 1_0000;
+    //  每日密码重试最大次数
+    private double pwdTries = 5;
+    //  当日日期
+    private LocalDate date;
     /* 构造方法 */
 
 
@@ -122,6 +128,23 @@ public class Account {
         this.limit = limit;
     }
 
+
+    public double getPwdTries() {
+        return pwdTries;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setPwdTries(double pwdTries) {
+        this.pwdTries = pwdTries;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -136,4 +159,5 @@ public class Account {
                 ", limit=" + limit +
                 '}';
     }
+
 }
