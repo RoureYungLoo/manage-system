@@ -1,7 +1,7 @@
 package com.luruoyang.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.Page;
+//import com.github.pagehelper.PageHelper;
 import com.luruoyang.mapper.LogMapper;
 import com.luruoyang.model.pojo.Log;
 import com.luruoyang.service.LogService;
@@ -21,13 +21,12 @@ public class LogServiceImpl implements LogService {
 
   @Override
   public PageResult<Log> getLogs(Integer page, Integer pageSize) {
-    PageHelper.startPage(page, pageSize);
-    List<Log> logs = logMapper.getLogs();
-
-    Page<Log> logPage = (Page<Log>) logs;
-
-    PageResult<Log> logPageResult = PageResult.getResult(logPage.getResult(), logPage.getTotal());
-    return logPageResult;
+    // PageHelper.startPage(page, pageSize);
+    // List<Log> logs = logMapper.getLogs();
+    // Page<Log> logPage = (Page<Log>) logs;
+    // PageResult<Log> logPageResult = PageResult.getResult(logPage.getResult(), logPage.getTotal());
+    // return logPageResult;
+    return null;
   }
 
   @Override

@@ -41,5 +41,13 @@ export const deptService = {
    */
   findById(deptId) {
     return instance.get(`${DEPT_PATH}/${deptId}`)
+  },
+  /**
+   * find departments data by query params and page params
+   * @param params
+   * @returns {Promise<axios.AxiosResponse<any>>}
+   */
+  findPage(params) {
+    return instance.get(`${DEPT_PATH}/page3`, {params})
   }
 }

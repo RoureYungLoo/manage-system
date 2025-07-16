@@ -5,6 +5,7 @@ import com.luruoyang.model.dto.DeptDto;
 import com.luruoyang.model.pojo.Dept;
 import com.luruoyang.service.DeptService;
 import com.luruoyang.utils.PageDto;
+import com.luruoyang.utils.PageResult;
 import com.luruoyang.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,12 @@ public class DeptController {
       result = Result.success(depts);
     }
     return result;
+  }
+
+  @GetMapping("/page3")
+  public Result findPage3(DeptDto deptDto) {
+    PageResult<Dept> r = deptService.findPage3(deptDto);
+    return Result.success(r);
   }
 
   /* 查询单个 */

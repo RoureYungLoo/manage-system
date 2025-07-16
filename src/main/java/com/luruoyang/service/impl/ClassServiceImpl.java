@@ -1,7 +1,7 @@
 package com.luruoyang.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.Page;
+//import com.github.pagehelper.PageHelper;
 import com.luruoyang.model.dto.ClassQueryParam;
 import com.luruoyang.enums.ClazzStatus;
 import com.luruoyang.enums.ClientError;
@@ -57,14 +57,11 @@ public class ClassServiceImpl implements ClassService {
    */
   @Override
   public PageResult<Clazz> findPage2(ClassQueryParam classParam) {
-    PageHelper.startPage(classParam.getPage(), classParam.getPageSize());
-
-    List<Clazz> clazzList = classMapper.findPage(classParam, null, null);
-
-    Page<Clazz> clazzPage = (Page<Clazz>) clazzList;
-
-    return PageResult.getResult(clazzPage.getResult(), clazzPage.getTotal());
-
+    // PageHelper.startPage(classParam.getPage(), classParam.getPageSize());
+    // List<Clazz> clazzList = classMapper.findPage(classParam, null, null);
+    // Page<Clazz> clazzPage = (Page<Clazz>) clazzList;
+    // return PageResult.getResult(clazzPage.getResult(), clazzPage.getTotal());
+    return null;
   }
 
   @Override

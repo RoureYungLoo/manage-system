@@ -1,7 +1,7 @@
 package com.luruoyang.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.Page;
+//import com.github.pagehelper.PageHelper;
 import com.luruoyang.model.dto.StuClazzCountDto;
 import com.luruoyang.model.dto.StuDegreeDto;
 import com.luruoyang.model.dto.StuPageParam;
@@ -28,15 +28,12 @@ public class StuServiceImpl implements StuService {
 
   @Override
   public PageResult<Stu> findPage(StuPageParam stuParam) {
-    PageHelper.startPage(stuParam.getPage(), stuParam.getPageSize());
-
-    List<Stu> stuList = stuMapper.findPage(stuParam);
-
-    Page<Stu> page = (Page<Stu>) stuList;
-
-    PageResult<Stu> pr = PageResult.getResult(page.getResult(), page.getTotal());
-
-    return pr;
+    // PageHelper.startPage(stuParam.getPage(), stuParam.getPageSize());
+    // List<Stu> stuList = stuMapper.findPage(stuParam);
+    // Page<Stu> page = (Page<Stu>) stuList;
+    // PageResult<Stu> pr = PageResult.getResult(page.getResult(), page.getTotal());
+    // return pr;
+    return null;
   }
 
   @Override

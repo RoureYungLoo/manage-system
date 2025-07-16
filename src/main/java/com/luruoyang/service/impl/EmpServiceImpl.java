@@ -2,9 +2,9 @@ package com.luruoyang.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+//import com.github.pagehelper.Page;
+//import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.PageInfo;
 import com.luruoyang.enums.LoginEnum;
 import com.luruoyang.enums.OptRes;
 import com.luruoyang.enums.OptType;
@@ -254,10 +254,10 @@ public class EmpServiceImpl implements EmpService {
    */
   @Override
   public PageResult<Emp> getEmpUsePageHelper(EmpPageParam param) throws Exception {
-    PageHelper.startPage(param.getPage(), param.getPageSize());
+    // PageHelper.startPage(param.getPage(), param.getPageSize());
 
     // 先查询主表分页数据
-    List<Emp> emps = empMapper.getEmpPage2(param); // [bug]
+    // List<Emp> emps = empMapper.getEmpPage2(param); // [bug]
 //    // 获取主表ID集合
 //    List<Long> empIds = emps.stream().map(Emp::getId).collect(Collectors.toList());
 //    // 批量查询员工工作经历
@@ -267,10 +267,10 @@ public class EmpServiceImpl implements EmpService {
 //    exprsByEmpIds.forEach(exprDto -> map.put(exprDto.getEmpId(), exprDto.getExprs()));
 //    // 组合数据
 //    emps.forEach(emp -> emp.setExprList(map.get(emp.getId())));
-    PageInfo<Emp> pageInfo = new PageInfo<>(emps);
-    PageResult<Emp> pageResult = PageResult.getResult(pageInfo.getList(), pageInfo.getTotal());
-
-    return pageResult;
+    // PageInfo<Emp> pageInfo = new PageInfo<>(emps);
+    // PageResult<Emp> pageResult = PageResult.getResult(pageInfo.getList(), pageInfo.getTotal());
+    // return pageResult;
+    return null;
   }
 
   @Override
@@ -341,16 +341,13 @@ public class EmpServiceImpl implements EmpService {
 
 
   public PageResult<Emp> getEmpUsePageHelper2(EmpPageParam param) {
-
-    PageHelper.startPage(param.getPage(), param.getPageSize());
-    List<Emp> emps = empMapper.getEmpPage2(param);
-    Page<Emp> empPage = (Page<Emp>) emps;
-
-    log.info("getEmpUsePageHelper: {}", empPage);
-
-    PageResult<Emp> pageResult = PageResult.getResult(empPage.getResult(), empPage.getTotal());
-
-    return pageResult;
+    // PageHelper.startPage(param.getPage(), param.getPageSize());
+    // List<Emp> emps = empMapper.getEmpPage2(param);
+    // Page<Emp> empPage = (Page<Emp>) emps;
+    // log.info("getEmpUsePageHelper: {}", empPage);
+    // PageResult<Emp> pageResult = PageResult.getResult(empPage.getResult(), empPage.getTotal());
+    // return pageResult;
+    return null;
   }
 
 }

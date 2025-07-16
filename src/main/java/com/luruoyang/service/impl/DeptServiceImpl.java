@@ -1,7 +1,10 @@
 package com.luruoyang.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+//import com.github.pagehelper.PageHelper;
+//import com.github.pagehelper.PageInfo;
 import com.luruoyang.annotation.Add;
 import com.luruoyang.annotation.Update;
 import com.luruoyang.model.dto.DeptDto;
@@ -14,12 +17,15 @@ import com.luruoyang.model.pojo.Dept;
 import com.luruoyang.service.DeptService;
 import com.luruoyang.service.EmpService;
 import com.luruoyang.utils.PageDto;
+import com.luruoyang.utils.PageResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DeptServiceImpl implements DeptService {
@@ -105,17 +111,41 @@ public class DeptServiceImpl implements DeptService {
 
   @Override
   public List<Dept> findPage2(Integer pageNo, Integer pageSize) {
-    PageHelper.startPage(pageNo, pageSize);
-    List<Dept> all = deptMapper.selectList(null);
-    PageInfo<Dept> pageInfo = new PageInfo<>(all);
-    List<Dept> deptList = pageInfo.getList();
-    return deptList;
+    // PageHelper.startPage(pageNo, pageSize);
+    // List<Dept> all = deptMapper.selectList(null);
+    // PageInfo<Dept> pageInfo = new PageInfo<>(all);
+    // List<Dept> deptList = pageInfo.getList();
+    // return deptList;
+    return null;
   }
 
   @Override
   public List<Dept> findQuery(DeptDto deptDto) {
     System.out.println(deptDto);
     return deptMapper.findQuery(deptDto);
+  }
+
+  @Override
+  public PageResult<Dept> findPage3(DeptDto deptDto) {
+    /* 分页查询 */
+    IPage<Dept> iPage = new Page<>(deptDto.getPageNo(), deptDto.getPageSize());
+
+    /* 条件查询 */
+    LambdaQueryWrapper<Dept> lqw = new LambdaQueryWrapper<>();
+    Integer deptId = deptDto.getId();
+    String deptDtoName = deptDto.getName();
+    lqw.eq(Objects.nonNull(deptId), Dept::getId, deptId)
+        .or(Objects.isNull(deptId))
+        .like(StringUtils.hasText(deptDtoName), Dept::getName, deptDtoName);
+
+    // 返回值 IPage<T>
+    IPage<Dept> selectedPage = deptMapper.selectPage(iPage, lqw);
+
+    // 返回值 List<T>
+    List<Dept> deptList = deptMapper.selectList(iPage, lqw);
+    // return PageResult.getResult(selectedPage.getRecords(), selectedPage.getTotal());
+
+    return PageResult.getResult(deptList, (long) deptList.size());
   }
 
   @Override

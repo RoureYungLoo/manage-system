@@ -7,20 +7,20 @@
         insert into tb_dept
         values (null, #{name}, #{createTime}, #{updateTime}, 1)
     </insert>
-    <update id="updateById">
-        update tb_dept
-        <set>
-            <if test="dept.name!=null">
-                name = #{dept.name},
-            </if>
-            <if test="dept.status!=null">
-                status = #{dept.status},
-            </if>
-        </set>
-        <where>
-            id = #{id}
-        </where>
-    </update>
+    <!--    <update id="updateById">-->
+    <!--        update tb_dept-->
+    <!--        <set>-->
+    <!--            <if test="dept.name!=null">-->
+    <!--                name = #{dept.name},-->
+    <!--            </if>-->
+    <!--            <if test="dept.status!=null">-->
+    <!--                status = #{dept.status},-->
+    <!--            </if>-->
+    <!--        </set>-->
+    <!--        <where>-->
+    <!--            id = #{id}-->
+    <!--        </where>-->
+    <!--    </update>-->
     <update id="update" parameterType="com.luruoyang.model.pojo.Dept">
         update tb_dept
         <set>
