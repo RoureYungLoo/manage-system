@@ -1,0 +1,1 @@
+import{i as t}from"./request-CymY9Pgy.js";const r="/clazzs",s={findPage(e){return t.get(r,{params:e})},updateById(e){return t.put(r,e)},save(e){return t.post(r,e)},findById(e){return t.get(`${r}/${e}`)},deleteById(e){return t.delete(`${r}/${e}`)},list(){return t.get(`${r}/list`)}};export{s as c};

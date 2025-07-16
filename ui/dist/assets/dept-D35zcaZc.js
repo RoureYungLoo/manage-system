@@ -1,0 +1,1 @@
+import{i as t}from"./request-CymY9Pgy.js";const r="/depts",n={list(){return t.get(r)},save(e){return t.post(r,e)},deleteById(e){return t.delete(`${r}/${e}`)},updateById(e){return t.put(r,e)},findById(e){return t.get(`${r}/${e}`)}};export{n as d};

@@ -1,0 +1,1 @@
+import{i as t}from"./request-CymY9Pgy.js";const r="/emps",s={findPage(e){return t.get(r,{params:e})},save(e){return t.post(r,e)},deleteBatch(e){return t.delete(r,{params:e})},findByEmpId(e){return t.get(`${r}/${e}`)},updateById(e){return t.put(r,e)},findEmpList(){return t.get(`${r}/list`)}};export{s as e};
