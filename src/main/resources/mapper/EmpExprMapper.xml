@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luruoyang.mapper.EmpExprMapper">
+
+    <insert id="saveBatch">
+        insert into tb_empexpr(id, begin, end, company, job, tb_emp_id)
+        values
+        <foreach collection="list" item="expr" separator=",">
+            (null, #{expr.begin}, #{expr.end}, #{expr.company}, #{expr.job}, #{expr.tbEmpId})
+        </foreach>
+
+    </insert>
+    <update id="update" parameterType="com.luruoyang.model.pojo.EmpExpr">
+        update tb_empexpr epr
+        set begin=#{begin},
+            end=#{end},
+            company=#{company},
+            job=#{job},
+            tb_emp_id=#{tbEmpId}
+        where id = #{id}
+    </update>
+    <delete id="deleteBatch" parameterType="com.luruoyang.model.pojo.EmpExpr">
+        delete
+        from tb_empexpr epr
+        <where>
+            <foreach collection="collection" open="epr.tb_emp_id  in (" separator="," close=")" item="empId">
+                #{empId}
+            </foreach>
+        </where>
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete
+        from tb_empexpr
+        where tb_emp_id = #{id}
+    </delete>
+    <select id="findExprsByEmpId" resultType="com.luruoyang.model.pojo.EmpExpr" parameterType="java.lang.Long">
+        select id, begin, end, company, job, tb_emp_id
+        from tb_empexpr
+        where tb_emp_id = #{empId}
+    </select>
+    <select id="findAll" resultType="com.luruoyang.model.pojo.EmpExpr">
+        select id, begin, end, company, job, tb_emp_id
+        from tb_empexpr
+    </select>
+
+    <resultMap id="exprMap" type="com.luruoyang.model.dto.ExprDto">
+        <id property="empId" column="tb_emp_id"/>
+        <collection property="exprs" ofType="com.luruoyang.model.pojo.EmpExpr">
+            <id column="id" property="id"/>
+            <result column="job" property="job"/>
+            <result column="begin" property="begin"/>
+            <result column="end" property="end"/>
+            <result column="company" property="company"/>
+            <result column="tb_emp_id" property="tbEmpId"/>
+        </collection>
+    </resultMap>
+    <select id="findExprsByEmpIds" parameterType="java.lang.Integer" resultMap="exprMap">
+        select id, begin, end, company, job, tb_emp_id
+        from tb_empexpr e
+        <where>
+            <foreach collection="collection" open="e.tb_emp_id IN (" separator="," close=")" item="empId">
+                #{empId}
+            </foreach>
+        </where>
+    </select>
+
+    <!-- 放弃这种方法, 该封装成对象就封装成对象 -->
+    <resultMap id="testMap" type="map">
+        <result property="key" column="tb_emp_id" javaType="java.lang.Long"></result>
+        <collection property="value" javaType="java.util.List" ofType="com.luruoyang.model.pojo.EmpExpr">
+            <id property="id" column="id"/>
+            <id property="begin" column="begin"/>
+            <id property="end" column="end"/>
+            <id property="company" column="company"/>
+            <id property="job" column="job"/>
+            <id property="tbEmpId" column="tb_emp_id"/>
+        </collection>
+    </resultMap>
+    <select id="findExprsMapByEmpIds" resultMap="testMap"
+            parameterType="java.lang.Long">
+        select id, begin, end, company, job, tb_emp_id
+        from tb_empexpr e
+        <where>
+            <foreach collection="collection" open="e.tb_emp_id IN (" separator="," close=")" item="empId">
+                #{empId}
+            </foreach>
+        </where>
+    </select>
+</mapper>

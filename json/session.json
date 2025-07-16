@@ -1,0 +1,89 @@
+{
+  "attributeNames": {},
+  "creationTime": 1751336675602,
+  "id": "209E409AD90E78A69FFC93D30B0B360E",
+  "lastAccessedTime": 1751336892628,
+  "maxInactiveInterval": 1800,
+  "new": false,
+  "servletContext": {
+    "attributeNames": {},
+    "contextPath": "",
+    "defaultSessionTrackingModes": [
+      "COOKIE",
+      "URL"
+    ],
+    "effectiveMajorVersion": 3,
+    "effectiveMinorVersion": 0,
+    "effectiveSessionTrackingModes": {
+      "$ref": "$.servletContext.defaultSessionTrackingModes"
+    },
+    "filterRegistrations": {
+      "requestContextFilter": {
+        "className": "org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter",
+        "initParameters": {},
+        "name": "requestContextFilter",
+        "servletNameMappings": [],
+        "urlPatternMappings": [
+          "/*"
+        ]
+      },
+      "Tomcat WebSocket (JSR356) Filter": {
+        "className": "org.apache.tomcat.websocket.server.WsFilter",
+        "initParameters": {},
+        "name": "Tomcat WebSocket (JSR356) Filter",
+        "servletNameMappings": [],
+        "urlPatternMappings": [
+          "/*"
+        ]
+      },
+      "characterEncodingFilter": {
+        "className": "org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter",
+        "initParameters": {},
+        "name": "characterEncodingFilter",
+        "servletNameMappings": [],
+        "urlPatternMappings": [
+          "/*"
+        ]
+      },
+      "formContentFilter": {
+        "className": "org.springframework.boot.web.servlet.filter.OrderedFormContentFilter",
+        "initParameters": {},
+        "name": "formContentFilter",
+        "servletNameMappings": [],
+        "urlPatternMappings": [
+          "/*"
+        ]
+      }
+    },
+    "initParameterNames": {},
+    "majorVersion": 4,
+    "minorVersion": 0,
+    "serverInfo": "Apache Tomcat/9.0.69",
+    "servletContextName": "application",
+    "servletNames": {},
+    "servletRegistrations": {
+      "dispatcherServlet": {
+        "className": "org.springframework.web.servlet.DispatcherServlet",
+        "initParameters": {},
+        "mappings": [
+          "/"
+        ],
+        "name": "dispatcherServlet"
+      }
+    },
+    "servlets": {},
+    "sessionCookieConfig": {
+      "httpOnly": false,
+      "maxAge": -1,
+      "secure": false
+    },
+    "sessionTimeout": 30,
+    "virtualServerName": "Tomcat/localhost"
+  },
+  "sessionContext": {
+    "ids": {}
+  },
+  "valueNames": [
+    "loginInfo"
+  ]
+}

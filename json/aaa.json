@@ -1,0 +1,6 @@
+[{
+  empId=1,
+  empExpr=[
+  EmpExpr(id=20, company=美图, job=Python, begin=2025-06-03, end=2025-07-31, tbEmpId=1),
+  EmpExpr(id=41, company=java, job=java, begin=2025-06-18, end=2025-07-16, tbEmpId=1)]},
+  {empId=2, empExpr=[EmpExpr(id=42, company=c, job=c, begin=2025-06-11, end=2025-07-30, tbEmpId=2), EmpExpr(id=43, company=pyton, job=python, begin=2025-06-02, end=2025-07-21, tbEmpId=2)]}, {empId=3, empExpr=[EmpExpr(id=49, company=meituan, job=c++, begin=2025-06-11, end=2025-07-31, tbEmpId=3), EmpExpr(id=50, company=meituan, job=c++, begin=2025-06-11, end=2025-07-31, tbEmpId=3)]}, {empId=4, empExpr=[EmpExpr(id=65, company=美图, job=Python, begin=2025-06-03, end=2025-07-31, tbEmpId=4), EmpExpr(id=68, company=111, job=222, begin=2025-06-18, end=2025-07-22, tbEmpId=4)]}, {empId=5, empExpr=[EmpExpr(id=69, company=111, job=222, begin=2025-06-18, end=2025-07-22, tbEmpId=5), EmpExpr(id=70, company=ali, job=java, begin=2025-06-10, end=2025-07-21, tbEmpId=5)]}, {empId=6, empExpr=[EmpExpr(id=75, company=huawei, job=jajva, begin=2025-06-10, end=2025-07-23, tbEmpId=6), EmpExpr(id=76, company=ali, job=c++, begin=2025-06-04, end=2025-07-29, tbEmpId=6)]}, {empId=142, empExpr=[EmpExpr(id=77, company=, job=, begin=null, end=null, tbEmpId=142)]}]

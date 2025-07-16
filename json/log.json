@@ -1,0 +1,29 @@
+{
+  "code": 1,
+  "data": {
+    "rows": [
+      {
+        "className": "Java101",
+        "costTime": 123,
+        "id": 1,
+        "methodName": "insert",
+        "methodParams": "1,2,3",
+        "operateEmpId": 12,
+        "operateTime": "2025-05-17",
+        "returnValue": "二二"
+      },
+      {
+        "className": "com.luruoyang.controller.LogController",
+        "costTime": 26,
+        "id": 9,
+        "methodName": "getLogs",
+        "methodParams": "[1, 10]",
+        "operateEmpId": 1,
+        "operateTime": "2025-06-29",
+        "returnValue": "{\"code\":1,\"data\":{\"rows\":[{\"className\":\"Java101\",\"costTime\":123,\"id\":1,\"methodName\":\"insert\",\"methodParams\":\"1,2,3\",\"operateEmpId\":12,\"operateTime\":\"2025-05-17\",\"returnValue\":\"二二\"}],\"total\":1},\"msg\":\"success\"}"
+      }
+    ],
+    "total": 2
+  },
+  "msg": "success"
+}

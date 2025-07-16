@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luruoyang.mapper.LogEmpMapper">
+
+    <insert id="saveLog" parameterType="com.luruoyang.model.pojo.Emp" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into tb_log_emp
+        values (#{id},
+                #{preData},
+                #{postData},
+                #{optTime},
+                #{optType},
+                #{optRes})
+    </insert>
+</mapper>

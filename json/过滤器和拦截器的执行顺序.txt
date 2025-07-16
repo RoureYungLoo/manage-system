@@ -1,0 +1,23 @@
+ ----> call AFilter#init()
+ ----> call BFilter#init()
+ ----> call LoginFilter#init()
+
+ ----> call AFilter#doFilter() start
+ ----> call BFilter#doFilter() start
+ ----> call LoginFilter#doFilter() start
+
+ ******* LoginInterceptor#preHandle *******
+ ******* BInterceptor#preHandle *******
+ ******* AInterceptor#preHandle *******
+
+ ******* AInterceptor#postHandle *******
+ ******* BInterceptor#postHandle *******
+ ******* LoginInterceptor#postHandle *******
+
+ ******* AInterceptor#afterCompletion *******
+ ******* BInterceptor#afterCompletion *******
+ ******* LoginInterceptor#afterCompletion *******
+
+ ----> call LoginFilter#doFilter() end
+ ----> call BFilter#doFilter() end
+ ----> call AFilter#doFilter() end

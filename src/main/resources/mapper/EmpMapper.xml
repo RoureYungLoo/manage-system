@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luruoyang.mapper.EmpMapper">
+    <insert id="insert" parameterType="com.luruoyang.model.pojo.Emp" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_emp (id, username, password, name, gender, phone, job, salary, image, entry_date, create_time,
+                            update_time, dept_id)
+        values (null, #{username}, #{password}, #{name}, #{gender}, #{phone}, #{job}, #{salary}, #{image},
+                #{entryDate}, #{createTime}, #{updateTime}, #{deptId})
+    </insert>
+    <update id="updateEmpById" parameterType="com.luruoyang.model.pojo.Emp">
+        update tb_emp
+        <set>
+            <if test="username!=null and username!=''">
+                username = #{username},
+            </if>
+            <if test="password!=null and password != ''">
+                password =#{password},
+            </if>
+            <if test="name!=null and name!=''">
+                name =#{name},
+            </if>
+            <if test="gender!=null">
+                gender =#{gender},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone =#{phone},
+            </if>
+            <if test="job!=null">
+                job =#{job},
+            </if>
+            <if test="salary!=null">
+                salary =#{salary},
+            </if>
+            <if test="image!=null and image!=''">
+                image =#{image},
+            </if>
+            <if test="entryDate!=null">
+                entry_date =#{entryDate},
+            </if>
+            <if test="createTime!=null">
+                create_time =#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time =#{updateTime},
+            </if>
+            <if test="deptId!=null">
+                dept_id = #{deptId}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="jobStatistics" resultType="com.luruoyang.model.dto.EmpJobDto">
+        SELECT CASE e.job
+                   WHEN 1 THEN '班主任'
+                   WHEN 2 THEN '讲师'
+                   WHEN 3 THEN '学工主管'
+                   WHEN 4 THEN '教研主管'
+                   WHEN 5 THEN '咨询师' END AS 'jobName',
+               COUNT(job)                   AS 'jobCount'
+        FROM tb_emp e
+        GROUP BY e.job;
+    </select>
+    <resultMap id="mapForTest" type="com.luruoyang.model.dto.EmpJobDtoForTest">
+        <collection property="jobList" ofType="java.lang.String">
+            <result column="jobName"/>
+        </collection>
+        <collection property="dataList" ofType="java.lang.Integer">
+            <result column="jobCount"/>
+        </collection>
+    </resultMap>
+    <select id="jobStatisticsForTest" resultMap="mapForTest">
+        SELECT CASE e.job
+                   WHEN 1 THEN '班主任'
+                   WHEN 2 THEN '讲师'
+                   WHEN 3 THEN '学工主管'
+                   WHEN 4 THEN '教研主管'
+                   WHEN 5 THEN '咨询师' END AS 'jobName',
+               count(job)                   as jobCount
+        FROM tb_emp e
+        group by e.job
+
+    </select>
+    <select id="genderStatistics" resultType="com.luruoyang.model.dto.EmpGenderDto">
+        select case gender
+                   when 1 then '男性员工'
+                   when 2 then '女性员工'
+            end              as 'name'
+             , count(gender) as value
+        from tb_emp e
+        group by gender;
+    </select>
+    <delete id="deleteBatch" parameterType="java.lang.Long">
+        delete
+        from tb_emp
+        where
+        <foreach collection="list" separator="," open="id IN (" close=")" item="empId">
+            #{empId}
+        </foreach>
+
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete
+        from tb_emp
+        where id = #{empId}
+    </delete>
+    <!--    <select id="findAll" resultType="com.luruoyang.pojo.Emp">-->
+    <!--        select id,-->
+    <!--               username,-->
+    <!--               password,-->
+    <!--               name,-->
+    <!--               gender,-->
+    <!--               phone,-->
+    <!--               job,-->
+    <!--               salary,-->
+    <!--               image,-->
+    <!--               entry_date,-->
+    <!--               create_time,-->
+    <!--               update_time,-->
+    <!--               dept_id-->
+    <!--        from tb_emp;-->
+    <!--    </select>-->
+
+    <select id="findAll" resultMap="empMap">
+        select e.*,
+               r.id        rid,
+               r.begin     rbegin,
+               r.end       rend,
+               r.company   rcompany,
+               r.job       rjob,
+               r.tb_emp_id rteid,
+               d.name      dname
+        from tb_emp e
+                 left join tb_empexpr r on e.id = r.tb_emp_id
+                 left join tb_dept d on e.dept_id = d.id
+    </select>
+
+    <resultMap id="empMap" type="com.luruoyang.model.pojo.Emp">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="job" property="job"/>
+        <result column="salary" property="salary"/>
+        <result column="image" property="image"/>
+        <result column="entry_date" property="entryDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dname" property="deptName"/>
+        <collection property="exprList" ofType="com.luruoyang.model.pojo.EmpExpr" column="e.id">
+            <id column="rid" property="id"/>
+            <result column="rbegin" property="begin"/>
+            <result column="rend" property="end"/>
+            <result column="rcompany" property="company"/>
+            <result column="rjob" property="job"/>
+            <result column="rteid" property="tbEmpId"/>
+        </collection>
+    </resultMap>
+    <!--根据ID查询员工信息-->
+    <select id="getById" resultMap="empMap" parameterType="java.lang.Long">
+        select e.*,
+               d.name      dname,
+               r.id        rid,
+               r.begin     rbegin,
+               r.end       rend,
+               r.job       rjob,
+               r.tb_emp_id rteid,
+               r.company   rcompany
+        from tb_emp e
+                 left join tb_empexpr r on e.id = r.tb_emp_id
+                 left join tb_dept d on e.dept_id = d.id
+        where e.id = #{id}
+    </select>
+    <select id="getEmpPage" resultType="com.luruoyang.model.pojo.Emp">
+        select e.*,d.name as 'deptName'
+        from tb_emp as e
+        left join tb_dept as d on e.dept_id = d.id
+        <where>
+            <if test="empPageParam.name != null and empPageParam.name !=''">
+                and e.name like concat('%',#{empPageParam.name},'%')
+            </if>
+            <if test="empPageParam.gender != null">
+                and gender = #{empPageParam.gender}
+            </if>
+            <if test="empPageParam.begin != null">
+                and entry_date <![CDATA[ >= ]]> #{empPageParam.begin}
+            </if>
+            <if test="empPageParam.end != null">
+                and entry_date <![CDATA[ <= ]]> #{empPageParam.end}
+            </if>
+        </where>
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- pageHelper, 无需手动指定limit参数, 不能连接工作经历表, 否则会导致统计错误 -->
+    <select id="getEmpPage2" resultType="com.luruoyang.model.pojo.Emp" parameterType="com.luruoyang.model.dto.EmpPageParam">
+        select
+        e.*,
+        d.name as 'deptName'
+        from tb_emp as e
+        left join tb_dept as d on e.dept_id = d.id
+        <where>
+            <if test="empPageParam.name != null and empPageParam.name !=''">
+                and e.name like concat('%',#{empPageParam.name},'%')
+            </if>
+            <if test="empPageParam.gender != null">
+                and gender = #{empPageParam.gender}
+            </if>
+            <if test="empPageParam.begin != null">
+                and entry_date <![CDATA[ >= ]]> #{empPageParam.begin}
+            </if>
+            <if test="empPageParam.end != null">
+                and entry_date <![CDATA[ <= ]]> #{empPageParam.end}
+            </if>
+        </where>
+        order by e.update_time desc
+    </select>
+    <select id="findByIds" resultMap="empMap" parameterType="java.lang.Long">
+        select
+        e.*,
+        d.name dname,
+        r.id rid,
+        r.begin rbegin,
+        r.end rend,
+        r.job rjob,
+        r.tb_emp_id rteid,
+        r.company rcompany
+        from tb_emp e
+        left join tb_empexpr r on e.id = r.tb_emp_id
+        left join tb_dept d on e.dept_id = d.id
+        <where>
+            <foreach collection="collection" open="e.id IN (" separator="," close=")" item="empId">
+                #{empId}
+            </foreach>
+        </where>
+
+
+    </select>
+    <select id="findAllEmps" resultType="com.luruoyang.model.pojo.Emp">
+        select e.id,
+               username,
+               password,
+               e.name,
+               gender,
+               phone,
+               job,
+               salary,
+               image,
+               entry_date    entryDate,
+               e.create_time createTime,
+               e.update_time updateTime,
+               dept_id       deptId,
+               d.name        deptName
+        from tb_emp e
+                 left join tb_dept d on e.dept_id = d.id
+    </select>
+    <select id="getCountByDeptId" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select count(dept_id)
+        from tb_emp
+        where dept_id = #{deptId}
+    </select>
+    <select id="login" resultType="emp"
+            parameterType="com.luruoyang.model.dto.LoginInfoDto">
+        select id, username, name, password
+        from tb_emp e
+        where username = #{username}
+    </select>
+</mapper>

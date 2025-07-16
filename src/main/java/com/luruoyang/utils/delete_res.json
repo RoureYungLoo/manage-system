@@ -1,0 +1,147 @@
+{
+  "contentLength": 0,
+  "headers": {
+    "Connection": "keep-alive",
+    "Content-Length": "0",
+    "Date": "Sat, 28 Jun 2025 02:14:04 GMT",
+    "Server": "AliyunOSS",
+    "x-oss-request-id": "685F4FEC716A9C33334F0570",
+    "x-oss-server-time": "59"
+  },
+  "httpResponse": {
+    "allHeaders": [
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "AliyunOSS",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "Server",
+        "value": "AliyunOSS",
+        "valuePos": 7
+      },
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "Sat",
+            "parameterCount": 0,
+            "parameters": []
+          },
+          {
+            "name": "28 Jun 2025 02:14:04 GMT",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "Date",
+        "value": "Sat, 28 Jun 2025 02:14:04 GMT",
+        "valuePos": 5
+      },
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "0",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "Content-Length",
+        "value": "0",
+        "valuePos": 15
+      },
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "keep-alive",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "Connection",
+        "value": "keep-alive",
+        "valuePos": 11
+      },
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "685F4FEC716A9C33334F0570",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "x-oss-request-id",
+        "value": "685F4FEC716A9C33334F0570",
+        "valuePos": 17
+      },
+      {
+        "buffer": {
+          "empty": false,
+          "full": false
+        },
+        "elements": [
+          {
+            "name": "59",
+            "parameterCount": 0,
+            "parameters": []
+          }
+        ],
+        "name": "x-oss-server-time",
+        "value": "59",
+        "valuePos": 18
+      }
+    ],
+    "locale": "zh_CN",
+    "params": {
+      "names": []
+    },
+    "protocolVersion": {
+      "major": 1,
+      "minor": 1,
+      "protocol": "HTTP"
+    },
+    "statusLine": {
+      "protocolVersion": {
+        "$ref": "$.httpResponse.protocolVersion"
+      },
+      "reasonPhrase": "No Content",
+      "statusCode": 204
+    }
+  },
+  "request": {
+    "contentLength": 0,
+    "headers": {
+      "Authorization": "OSS LTAI5tH1gKC6HWJoC2UqWWAe:/L1kMhs5NIfYVER/ZCeJ8KlPrbY=",
+      "Date": "Sat, 28 Jun 2025 02:14:02 GMT"
+    },
+    "method": "DELETE",
+    "uri": "http://luruoyang.oss-cn-hangzhou.aliyuncs.com/Snipaste_2025-05-08_16-54-38.png",
+    "useChunkEncoding": false,
+    "useUrlSignature": false
+  },
+  "requestId": "685F4FEC716A9C33334F0570",
+  "statusCode": 204,
+  "successful": true,
+  "uri": "http://luruoyang.oss-cn-hangzhou.aliyuncs.com/Snipaste_2025-05-08_16-54-38.png"
+}

@@ -1,0 +1,57 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/manage_system?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: MySQL123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 10
+      idle-timeout: 180000
+  servlet:
+    multipart:
+      max-file-size: 100GB
+      max-request-size: 100GB
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.luruoyang.model
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+upload:
+  path: upload
+  liver-server: http://127.0.0.1:5500/
+
+aliyun:
+  oss:
+    #    bucket-name: luruoyang
+    #    endpoint: oss-cn-hangzhou.aliyuncs.com
+    #    region: cn-hangzhou
+
+    bucket-name: ${BUCKET_NAME}
+    endpoint: ${ENDPOINT}
+    region: ${REGION}
+    access-key-id: ${OSS_ACCESS_KEY_ID}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET}
+
+author:
+  name: luruoyang
+  nickname: randolflu
+  birth: 1998-02-16
+  college: zzu
+  hometown: zhumadian
+  career: Engineer
+  type: 1
+  uid: 199802160019
+
+jjwt:
+  secret: 2v3404m87yvt54m80
+  expiration: 720000000

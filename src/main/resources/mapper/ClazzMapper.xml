@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luruoyang.mapper.ClassMapper">
+    <insert id="save" parameterType="com.luruoyang.model.pojo.Clazz">
+        insert into tb_clazz(id, name, room, begin_date, end_date, master_id, subject, create_time, update_time, status)
+        VALUES (null,
+                #{name},
+                #{room},
+                #{beginDate},
+                #{endDate},
+                #{masterId},
+                #{subject},
+                #{createTime},
+                #{createTime},
+                #{status})
+    </insert>
+    <update id="updateById" parameterType="com.luruoyang.model.pojo.Clazz">
+        update tb_clazz
+        <set>
+            <if test="name != null and name != '' ">
+                name = #{name},
+            </if>
+            <if test="room != null and room != '' ">
+                room = #{room},
+            </if>
+            <if test="beginDate != null ">
+                begin_date = #{beginDate},
+            </if>
+            <if test="endDate != null  ">
+                end_date = #{endDate},
+            </if>
+            <if test="masterId != null ">
+                master_id = #{masterId},
+            </if>
+            <if test="subject != null ">
+                subject = #{subject},
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete
+        from tb_clazz
+        where id = #{id}
+    </delete>
+
+    <!--班级分页查询返回结果-->
+    <resultMap id="clazzMap" type="com.luruoyang.model.pojo.Clazz">
+        <id column="cid" property="id"/>
+        <result column="cname" property="name"/>
+        <result column="croom" property="room"/>
+        <result column="cbegin_date" property="beginDate"/>
+        <result column="cend_date" property="endDate"/>
+        <result column="cmaster_id" property="masterId"/>
+        <result column="csubject" property="subject"/>
+        <result column="ccreate_time" property="createTime"/>
+        <result column="cupdate_time" property="updateTime"/>
+        <result column="cstatus" property="status"/>
+        <result column="ename" property="masterName"/>
+        <result column="total" property="total"/>
+    </resultMap>
+    <select id="findPage" resultMap="clazzMap" parameterType="com.luruoyang.model.dto.ClassQueryParam">
+        select
+        c.id cid,
+        c.name cname,
+        c.room croom,
+        c.begin_date cbegin_date,
+        c.end_date cend_date,
+        c.master_id cmaster_id,
+        c.subject csubject,
+        c.create_time ccreate_time,
+        c.update_time cupdate_time,
+        c.status cstatus,
+        e.name ename
+        from tb_clazz c left join tb_emp e on c.master_id = e.id
+        <where>
+            <if test="classParam.name!=null and classParam.name!=''">
+                and c.name like concat('%',#{classParam.name},'%')
+            </if>
+            <if test="classParam.begin!=null">
+                and c.end_date <![CDATA[ >= ]]> #{classParam.begin}
+            </if>
+            <if test="classParam.end!=null ">
+                and c.end_date <![CDATA[ <= ]]> #{classParam.end}
+            </if>
+        </where>
+        # -- 手动处理自动分页, 符合条件的记录数需要单独统计
+        <if test="offset!=null and pageSize !=null">
+            limit #{offset}, #{pageSize}
+        </if>
+        order by c.update_time desc
+    </select>
+    <!--  根据ID查询  -->
+    <select id="findById" resultType="com.luruoyang.model.pojo.Clazz" parameterType="java.lang.Long">
+        select *
+        from tb_clazz
+        where id = #{id}
+    </select>
+    <select id="findList" resultType="com.luruoyang.model.pojo.Clazz">
+        select id,
+               name,
+               room,
+               begin_date,
+               end_date,
+               master_id,
+               subject,
+               create_time,
+               update_time,
+               status
+        from tb_clazz
+        order by update_time
+    </select>
+    <select id="count" resultType="java.lang.Long">
+        select count(*)
+        from tb_clazz
+    </select>
+    <select id="findMatchCount" resultType="java.lang.Long" parameterType="com.luruoyang.model.dto.ClassQueryParam">
+        select
+        count(*) total
+        from tb_clazz c left join tb_emp e on c.master_id = e.id
+        <where>
+            <if test="classParam.name!=null and classParam.name!=''">
+                and c.name like concat('%',#{classParam.name},'%')
+            </if>
+            <if test="classParam.begin!=null">
+                and c.end_date <![CDATA[ >= ]]> #{classParam.begin}
+            </if>
+            <if test="classParam.end!=null ">
+                and c.end_date <![CDATA[ <= ]]> #{classParam.end}
+            </if>
+        </where>
+    </select>
+</mapper>
