@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@Component
+//@Component
 @Aspect
 public class LogAspect {
 

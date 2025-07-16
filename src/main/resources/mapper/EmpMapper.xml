@@ -266,7 +266,7 @@
         from tb_emp
         where dept_id = #{deptId}
     </select>
-    <select id="login" resultType="emp"
+    <select id="login" resultType="com.luruoyang.model.pojo.Emp"
             parameterType="com.luruoyang.model.dto.LoginInfoDto">
         select id, username, name, password
         from tb_emp e

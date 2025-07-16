@@ -56,7 +56,7 @@ public class JjwtUtils {
 
   public boolean check(String token) {
     boolean flag = false;
-    if (!Objects.isNull(token) && !token.isBlank()) {
+    if (!Objects.isNull(token) && !token.isEmpty()) {
       Claims claims = null;
       try {
         claims = parseToken(token);

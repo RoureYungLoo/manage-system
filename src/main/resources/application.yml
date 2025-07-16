@@ -18,7 +18,8 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.luruoyang.model
+  type-aliases-package: com.luruoyang.model.pojo
+
 
 pagehelper:
   helper-dialect: mysql

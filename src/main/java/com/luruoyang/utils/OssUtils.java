@@ -90,8 +90,16 @@ public class OssUtils {
   }
 
   public void download(String filename, HttpServletResponse response) {
+    String fname = null;
+    try {
+      fname = URLEncoder.encode(filename, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
     response.setContentType("application/octet-stream");
-    response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, StandardCharsets.UTF_8));
+
+    response.setHeader("Content-Disposition", "attachment;filename=" + fname);
 
     try {
       // 获取OSS文件对象

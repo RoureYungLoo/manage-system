@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +28,14 @@ public class CookieController {
 
     String jsonString = JSON.toJSONString(new User(username, password));
     /* UTF编码, 否则报错 */
-    Cookie cookie = new Cookie("userInfo", URLEncoder.encode(jsonString, StandardCharsets.UTF_8));
+    String value = null;
+    try {
+      value = URLEncoder.encode(jsonString, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+    Cookie cookie = new Cookie("userInfo", value);
     log.info("------> setCookie: {}", cookie);
     cookie.setMaxAge(60 * 10);
     response.addCookie(cookie);
