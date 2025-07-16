@@ -1,6 +1,8 @@
 package com.luruoyang.mapper;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luruoyang.model.dto.*;
 import com.luruoyang.model.pojo.Emp;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface EmpMapper {
+public interface EmpMapper extends BaseMapper<Emp> {
   List<Emp> findAll() throws Exception;
 
   //  int deleteById(List<Long> ids) throws Exception;
@@ -46,4 +48,6 @@ public interface EmpMapper {
   Long getCountByDeptId(Long deptId);
 
   Emp login(LoginInfoDto loginInfo);
+
+  int increase(@Param("ew") Wrapper wrapper, @Param("amount") int amount);
 }

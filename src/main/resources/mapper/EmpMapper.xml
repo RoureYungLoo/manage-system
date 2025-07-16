@@ -53,6 +53,10 @@
             id = #{id}
         </where>
     </update>
+    <update id="increase">
+        update tb_emp
+        set salary = salary + #{amount} ${ew.customSqlSegment}
+    </update>
 
     <select id="jobStatistics" resultType="com.luruoyang.model.dto.EmpJobDto">
         SELECT CASE e.job

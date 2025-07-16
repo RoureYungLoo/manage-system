@@ -32,7 +32,7 @@ public class DeptServiceImpl implements DeptService {
 
   @Override
   public List<Dept> findAll() {
-    return deptMapper.findAll();
+    return deptMapper.selectList(null);
   }
 
   /**
@@ -54,25 +54,25 @@ public class DeptServiceImpl implements DeptService {
   public boolean save(Dept dept) {
     dept.setCreateTime(LocalDateTime.now());
     dept.setUpdateTime(LocalDateTime.now());
-    return deptMapper.save(dept) == 1;
+    return deptMapper.insert(dept) == 1;
   }
 
   @Override
   public Dept findById(Long id) {
-    return deptMapper.findById(id);
+    return deptMapper.selectById(id);
   }
 
   @Override
   @Update
   public boolean updateById(Long id, Dept dept) {
-    Dept dbDept = deptMapper.findById(id);
+    Dept dbDept = deptMapper.selectById(id);
     if (dbDept == null) return false;
 
     BeanUtils.copyProperties(dept, dbDept);
     dbDept.setUpdateTime(LocalDateTime.now());
 
 //    return deptMapper.updateById(id, dept) == 1;
-    return deptMapper.update(dbDept) == 1;
+    return deptMapper.updateById(dbDept) == 1;
   }
 
   /**
@@ -84,7 +84,7 @@ public class DeptServiceImpl implements DeptService {
   @Override
   @Update
   public boolean update(Dept dept) {
-    Dept dbDept = deptMapper.findById(dept.getId());
+    Dept dbDept = deptMapper.selectById(dept.getId());
     if (dbDept == null) throw new ClientSideException(ClientError.NO_SUCH_DEPT);
 
     BeanUtils.copyProperties(dept, dbDept);
@@ -93,8 +93,9 @@ public class DeptServiceImpl implements DeptService {
     int affected = 0;
 
     try {
-      affected = deptMapper.update(dbDept);
+      affected = deptMapper.updateById(dbDept);
     } catch (Exception e) {
+      e.printStackTrace();
       throw new ClientSideException(ClientError.DEPT_NAME_EXISTS);
     }
 
@@ -105,7 +106,7 @@ public class DeptServiceImpl implements DeptService {
   @Override
   public List<Dept> findPage2(Integer pageNo, Integer pageSize) {
     PageHelper.startPage(pageNo, pageSize);
-    List<Dept> all = deptMapper.findAll();
+    List<Dept> all = deptMapper.selectList(null);
     PageInfo<Dept> pageInfo = new PageInfo<>(all);
     List<Dept> deptList = pageInfo.getList();
     return deptList;

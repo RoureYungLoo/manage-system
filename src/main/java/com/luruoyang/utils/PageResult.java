@@ -1,5 +1,6 @@
 package com.luruoyang.utils;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

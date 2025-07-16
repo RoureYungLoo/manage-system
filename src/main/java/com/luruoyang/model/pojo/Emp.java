@@ -1,5 +1,6 @@
 package com.luruoyang.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +31,9 @@ public class Emp {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updateTime;
 
+  @TableField(exist = false)
   private String deptName;
 
+  @TableField(exist = false)
   private List<EmpExpr> exprList;
 }
