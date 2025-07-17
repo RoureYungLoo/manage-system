@@ -42,8 +42,8 @@ public class EmpExprController {
 
   @DeleteMapping("/{empId}")
   public Result deleteExprsByEmpId(@PathVariable Long empId) {
-    exprService.deleteById(empId);
-    return Result.success();
+    boolean b = exprService.deleteByExprListById(empId);
+    return Result.success(b);
   }
 
   @GetMapping("/ids")

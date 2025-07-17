@@ -22,7 +22,7 @@ instance.interceptors.response.use(function (response) {
   let data = response.data;
   console.log("服务端响应: ", data)
   if (data.code === 0) {
-    ElMessage.error(data.msg)
+    ElMessage.info(data.msg)
   } else if (data.code === 1) {
     return Promise.resolve(data)
   }

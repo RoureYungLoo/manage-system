@@ -10,19 +10,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author luruoyang
+ */
 public interface EmpService extends IService<Emp> {
-  public List<Emp> findAll() throws Exception;
+  List<Emp> findAll();
 
   @Transactional(rollbackFor = Exception.class)
-  boolean deleteByIds(List<Long> ids) throws Exception;
+  boolean deleteByIds(List<Long> ids);
 
-  boolean deleteById(Long id) throws Exception;
+  boolean deleteById(Long empId) ;
 
   List<Emp> findByIds(List<Long> empIds);
 
   //  @Transactional
-  @Transactional(rollbackFor = {Exception.class})
-  boolean save(Emp emp);
+  // @Transactional(rollbackFor = {Exception.class})
+  // boolean save(Emp emp);
 
   @Transactional
   boolean updateEmpById(Emp emp);

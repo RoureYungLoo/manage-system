@@ -7,6 +7,7 @@ import com.luruoyang.model.pojo.Emp;
 import com.luruoyang.service.EmpService;
 import com.luruoyang.utils.PageResult;
 import com.luruoyang.utils.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author luruoyang
+ */
+@Slf4j
 @RestController
 @RequestMapping("/emps")
 public class EmpController {
-
-  public static final Logger logger = LoggerFactory.getLogger(EmpController.class);
 
   @Autowired
   private EmpService empService;
@@ -38,8 +41,8 @@ public class EmpController {
   /* 删 */
   @LogOperation
   @DeleteMapping("/{id}")
-  public Result deleteById(@PathVariable("id") Long id) throws Exception {
-    if (empService.deleteById(id)) {
+  public Result deleteById(@PathVariable("id") Long empId)  {
+    if (empService.deleteById(empId)) {
       return Result.success();
     } else {
       return Result.fail();
@@ -48,14 +51,10 @@ public class EmpController {
 
   /**
    * 批量删除
-   *
-   * @param empIds
-   * @return
-   * @throws Exception
    */
   @DeleteMapping()
   @LogOperation
-  public Result deleteByIds(@RequestParam("ids") List<Long> empIds) throws Exception {
+  public Result deleteByIds(@RequestParam("ids") List<Long> empIds) {
     return Result.success(empService.deleteByIds(empIds));
   }
 
@@ -86,7 +85,7 @@ public class EmpController {
   /* 查询所有 */
   @GetMapping("/list")
   public Result findAll(EmpDto empDto) throws Exception {
-    logger.info("find all {}", empDto);
+    log.info("find all {}", empDto);
     List<Emp> emps = empService.findAll();
     return emps != null ? Result.success(emps) : Result.fail();
   }
@@ -95,7 +94,7 @@ public class EmpController {
 
   @GetMapping
   public Result getEmpPage(EmpPageParam empPageParam) throws Exception {
-    logger.info("员工分页查询参数 {}", empPageParam);
+    log.info("员工分页查询参数 {}", empPageParam);
     // PageResult<Emp> pageResult = empService.getEmpPage(empPageParam);
     // PageResult<Emp> pageResult = empService.getEmpUsePageHelper(empPageParam);
     PageResult<Emp> pageResult = empService.getEmpUseMybatisPlusPaginationInterceptor(empPageParam);

@@ -10,12 +10,13 @@ import java.util.List;
 
 public interface EmpExprService extends IService<EmpExpr> {
 
-  boolean saveBatch(List<EmpExpr> exprList);
+  @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+  boolean saveExprList(List<EmpExpr> exprList);
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  boolean deleteBatch(List<Long> empIds);
+  @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+  boolean deleteExprList(List<Long> empIds);
 
-  Integer deleteById(Long id);
+  boolean deleteByExprListById(Long id);
 
   List<EmpExpr> findByEmpId(Long id);
 

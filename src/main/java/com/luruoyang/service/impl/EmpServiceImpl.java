@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSON;
 //import com.github.pagehelper.PageInfo;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -54,8 +56,9 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
   private JjwtUtils jjwtUtils;
 
   @Override
-  public List<Emp> findAll() throws Exception {
-    return empMapper.findAll();
+  public List<Emp> findAll() {
+    // return empMapper.findAll();
+    return empMapper.selectList(null);
   }
 
 
@@ -68,25 +71,26 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
    */
 
   @Override
-  public boolean deleteById(Long id) throws Exception {
+  public boolean deleteById(Long empId) {
 
     // 删除员工记录
-    empMapper.deleteById(id);
+    boolean step1 = this.removeById(empId);
 
     // 删除员工工作经历
-    exprService.deleteById(id);
-    return true;
+    LambdaUpdateWrapper<EmpExpr> wrapper = Wrappers.lambdaUpdate();
+    wrapper.eq(Objects.nonNull(empId), EmpExpr::getTbEmpId, empId);
+    boolean step2 = exprService.remove(wrapper);
+    return step1 && step2;
   }
 
   /**
    * 根据ID批量删除员工
    *
-   * @param empIds
-   * @return
-   * @throws Exception
+   * @param empIds 员工ID集合
+   * @return true 成功, false 失败
    */
   @Override
-  public boolean deleteByIds(List<Long> empIds) throws Exception {
+  public boolean deleteByIds(List<Long> empIds) {
     log.info("批量删除员工ID: {}", empIds);
     LogEmp.LogEmpBuilder logBuilder = LogEmp.builder()
         .optTime(LocalDateTime.now())
@@ -95,14 +99,16 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
         .preData(JSON.toJSONString(findByIds(empIds)));
 
     /* 判空校验 */
-    if (empIds == null || empIds.isEmpty()) return false;
+    if (CollectionUtils.isEmpty(empIds)) {
+      return false;
+    }
 
     try {
       empMapper.deleteBatch(empIds);
-      exprService.deleteBatch(empIds);
+      exprService.deleteExprList(empIds);
     } catch (Exception e) {
-
-      throw e;
+      log.warn(e.getMessage());
+      throw new RuntimeException(e);
     } finally {
       logBuilder.postData("");
       LogEmp logEmp = logBuilder.build();
@@ -114,70 +120,19 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
 
   @Override
   public List<Emp> findByIds(List<Long> empIds) {
-    return empMapper.findByIds(empIds);
-  }
-
-  /**
-   * 添加员工
-   *
-   * @param emp
-   * @return
-   * @throws MyException
-   */
-
-  @Override
-  public boolean save(Emp emp) {
-    /* 准备记录日志 */
-    LogEmp logEmpEntry = LogEmp.builder()
-        .preData("")
-        .postData("")
-        .optTime(LocalDateTime.now())
-        .optType(OptType.insert.getCode())
-        .optRes(OptRes.success.getCode()) // 假定操作成功
-        .build();
-
-    try {
-      String password = emp.getPassword();
-      if (Objects.isNull(password) || password.isEmpty()) {
-        emp.setPassword("123456");
-      }
-      emp.setCreateTime(LocalDateTime.now());
-      emp.setUpdateTime(LocalDateTime.now());
-
-      empMapper.insert(emp);
-
-      /* set expr empId */
-      List<EmpExpr> exprList = emp.getExprList();
-      if (!exprList.isEmpty()) {
-        for (EmpExpr empExpr : exprList) {
-          empExpr.setTbEmpId(emp.getId());
-        }
-        /* insert employ experience */
-        exprService.saveBatch(exprList);
-      }
-
-      if (emp.getSalary() <= 3000) {
-        // throw new Exception(""); // 编译期异常
-        throw new ClientSideException("工资太低了, 狗都不干");
-      }
-    } catch (Exception e) {
-      /* 操作失败 */
-      logEmpEntry.setOptRes(OptRes.failed.getCode());
-      throw new RuntimeException(e.getMessage());
-    } finally {
-      /* save the log */
-      logEmpEntry.setPostData(JSON.toJSONString(emp));
-      logEmpService.saveLog(logEmpEntry);
-    }
-
-    return true;
+    List<Emp> empList = empMapper.selectByIds(empIds);
+    empList.forEach(emp -> {
+      List<EmpExpr> empExprList = exprService.findByEmpId(emp.getId());
+      emp.setExprList(empExprList);
+    });
+    return empList;
   }
 
   /**
    * 更新员工信息
    *
-   * @param emp
-   * @return
+   * @param emp 员工信息
+   * @return true 更新成功, false 更新失败
    */
   @Override
   public boolean updateEmpById(Emp emp) {
@@ -194,20 +149,22 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
     try {
       /* 更新员工基本信息 */
       emp.setUpdateTime(LocalDateTime.now());
-      empMapper.updateEmpById(emp);
+      // empMapper.updateEmpById(emp);
+      this.updateById(emp);
 
       Long empId = emp.getId();
 
       /* 删除旧的工作经历 */
-      exprService.deleteById(empId);
+      exprService.deleteByExprListById(empId);
 
       /* 添加新的工作经历 */
       List<EmpExpr> exprList = emp.getExprList();
-      if (!exprList.isEmpty()) {
+      if (CollectionUtils.isNotEmpty(exprList)) {
         exprList.forEach(empExpr -> empExpr.setTbEmpId(empId));
         exprService.saveBatch(exprList);
       }
     } catch (Exception e) {
+      log.warn(e.getMessage());
       builder.optRes(OptRes.failed.getCode());
       throw e;
     } finally {
@@ -219,20 +176,18 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
   }
 
   /**
-   * 有两种方法 [记得练习]
-   *
-   * @param id
-   * @return
+   * @param id id
+   * @return emp
    */
-  @Override
-  public Emp findById(Long id) {
+  public Emp findByIdVersion2(Long id) {
     // 查询员工表左连接工作经历表
-    return empMapper.getById(id);
+    return empMapper.selectById(id);
   }
 
-  public Emp findByIdVersion2(Long id) {
+  @Override
+  public Emp findById(Long id) {
     // 查询员工表
-    Emp emp = empMapper.getById(id);
+    Emp emp = empMapper.selectById(id);
     // 查询工作经历表
     List<EmpExpr> exprList = exprService.findByEmpId(id);
     emp.setExprList(exprList);
@@ -299,7 +254,8 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
     LambdaQueryWrapper<Emp> wrapper = new LambdaQueryWrapper<>();
     wrapper.like(StringUtils.hasText(name), Emp::getName, name)
         .eq(Objects.nonNull(gender), Emp::getGender, gender)
-        .between(begin != null && end != null, Emp::getEntryDate, begin, end);
+        .between(begin != null && end != null, Emp::getEntryDate, begin, end)
+        .orderByDesc(Emp::getUpdateTime);
 
     // 查询员工表
     IPage<Emp> empPage = empMapper.selectPage(page, wrapper);
@@ -312,14 +268,12 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
       emp.setExprList(empExprList);
     }
 
-    PageResult<Emp> pageResult = PageResult.getResult(empList, page.getTotal());
-    return pageResult;
+    return PageResult.getResult(empList, page.getTotal());
   }
 
   @Override
   public List<EmpGenderDto> genderStatistics() {
-    List<EmpGenderDto> empGenderDtos = empMapper.genderStatistics();
-    return empGenderDtos;
+    return empMapper.genderStatistics();
   }
 
   @Override
@@ -412,8 +366,6 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
       emp.setCreateTime(LocalDateTime.now());
       emp.setUpdateTime(LocalDateTime.now());
 
-      // empMapper.insert(emp);
-      // save(emp);
       this.save(emp);
 
       /* set expr empId */
@@ -422,14 +374,9 @@ public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpSe
         for (EmpExpr empExpr : exprList) {
           empExpr.setTbEmpId(emp.getId());
         }
-        /* insert employ experience */
-        exprService.saveBatch(exprList);
+        boolean b = exprService.saveExprList(exprList);
       }
 
-      if (emp.getSalary() <= 3000) {
-        // throw new Exception(""); // 编译期异常
-        throw new ClientSideException("工资太低了, 狗都不干");
-      }
     } catch (Exception e) {
       /* 操作失败 */
       logEmpEntry.setOptRes(OptRes.failed.getCode());

@@ -328,12 +328,13 @@ const selectionChange = (emps) => {
   ids.value = emps.map(emp => emp.id)
 }
 
+const handleDelete = (empId) => {
+  ids.value = [empId]
+  handleDeleteBatch()
+}
+
 /* 批量删除员工 */
-const handleDeleteBatch = async (params) => {
-  /* 处理单个删除按钮 */
-  if (params && params.length === 1) {
-    ids.value = params
-  }
+const handleDeleteBatch = async () => {
   if (ids.value.length === 0) {
     await ElMessageBox.alert("请选择要删除的员工", "提示", {
       confirmButtonText: "确定",
@@ -352,10 +353,11 @@ const handleDeleteBatch = async (params) => {
   ).then(async () => {
     /* 确定删除 */
     const response = await empService.deleteBatch({
-      ids: ids
+      ids: ids.value.join(',')
     });
     if (response.code === 1) {
       ElMessage.success("删除成功")
+      ids.value = []
       fetchData()
     } else {
       ElMessage.error("删除失败")
@@ -489,7 +491,7 @@ onMounted(async () => {
     <el-table-column label="操作" width="160" fixed="right">
       <template #default="{row}">
         <el-button type="primary" @click="handleEdit(row.id)" text>编辑</el-button>
-        <el-button type="danger" @click="handleDeleteBatch([row.id])" text>删除</el-button>
+        <el-button type="danger" @click="handleDelete(row.id)" text>删除</el-button>
       </template>
     </el-table-column>
   </el-table>

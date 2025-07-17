@@ -13,7 +13,7 @@ import java.util.List;
 
 @Mapper
 public interface EmpMapper extends BaseMapper<Emp> {
-  List<Emp> findAll() throws Exception;
+  List<Emp> findAll();
 
   //  int deleteById(List<Long> ids) throws Exception;
   int deleteBatch(List<Long> ids) throws Exception;
