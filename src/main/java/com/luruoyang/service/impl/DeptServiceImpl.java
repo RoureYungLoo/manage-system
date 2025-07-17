@@ -1,10 +1,12 @@
 package com.luruoyang.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 //import com.github.pagehelper.PageHelper;
 //import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luruoyang.annotation.Add;
 import com.luruoyang.annotation.Update;
 import com.luruoyang.model.dto.DeptDto;
@@ -14,21 +16,25 @@ import com.luruoyang.exception.BusinessException;
 import com.luruoyang.exception.ClientSideException;
 import com.luruoyang.mapper.DeptMapper;
 import com.luruoyang.model.pojo.Dept;
+import com.luruoyang.model.pojo.Emp;
 import com.luruoyang.service.DeptService;
 import com.luruoyang.service.EmpService;
 import com.luruoyang.utils.PageDto;
 import com.luruoyang.utils.PageResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
-public class DeptServiceImpl implements DeptService {
+public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
 
   @Autowired
   private DeptMapper deptMapper;
@@ -38,7 +44,8 @@ public class DeptServiceImpl implements DeptService {
 
   @Override
   public List<Dept> findAll() {
-    return deptMapper.selectList(null);
+    // return deptMapper.selectList(null);
+    return this.list();
   }
 
   /**
@@ -49,9 +56,12 @@ public class DeptServiceImpl implements DeptService {
    */
   @Override
   public boolean deleteById(Long id) {
-    Long empCountsUnderDept = empService.findEmpCountByDeptId(id);
-    if (empCountsUnderDept > 0) throw new BusinessException(BusinessErrorEnum.DEPT_NOT_EMPTY);
-
+    LambdaQueryWrapper<Emp> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(Objects.nonNull(id), Emp::getDeptId, id);
+    long empCountsUnderDept = empService.count(wrapper);
+    if (empCountsUnderDept > 0) {
+      throw new BusinessException(BusinessErrorEnum.DEPT_NOT_EMPTY);
+    }
     return deptMapper.deleteById(id) == 1;
   }
 
@@ -72,7 +82,10 @@ public class DeptServiceImpl implements DeptService {
   @Update
   public boolean updateById(Long id, Dept dept) {
     Dept dbDept = deptMapper.selectById(id);
-    if (dbDept == null) return false;
+    if (dbDept == null) {
+      log.warn("no such dept: id={}", id);
+      return false;
+    }
 
     BeanUtils.copyProperties(dept, dbDept);
     dbDept.setUpdateTime(LocalDateTime.now());
@@ -91,7 +104,9 @@ public class DeptServiceImpl implements DeptService {
   @Update
   public boolean update(Dept dept) {
     Dept dbDept = deptMapper.selectById(dept.getId());
-    if (dbDept == null) throw new ClientSideException(ClientError.NO_SUCH_DEPT);
+    if (dbDept == null) {
+      throw new ClientSideException(ClientError.NO_SUCH_DEPT);
+    }
 
     BeanUtils.copyProperties(dept, dbDept);
     dbDept.setUpdateTime(LocalDateTime.now());
@@ -121,8 +136,16 @@ public class DeptServiceImpl implements DeptService {
 
   @Override
   public List<Dept> findQuery(DeptDto deptDto) {
-    System.out.println(deptDto);
-    return deptMapper.findQuery(deptDto);
+    String name = deptDto.getName();
+    Integer deptId = deptDto.getId();
+
+    IPage<Dept> page = new Page<>(deptDto.getPageNo(), deptDto.getPageSize());
+    LambdaQueryWrapper<Dept> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(Objects.nonNull(deptId), Dept::getId, deptId)
+        .like(StringUtils.hasText(name), Dept::getName, name);
+
+    IPage<Dept> deptPage = this.page(page, wrapper);
+    return deptPage.getRecords();
   }
 
   @Override
@@ -136,7 +159,8 @@ public class DeptServiceImpl implements DeptService {
     String deptDtoName = deptDto.getName();
     lqw.eq(Objects.nonNull(deptId), Dept::getId, deptId)
         .or(Objects.isNull(deptId))
-        .like(StringUtils.hasText(deptDtoName), Dept::getName, deptDtoName);
+        .like(StringUtils.hasText(deptDtoName), Dept::getName, deptDtoName)
+        .orderByDesc(Dept::getUpdateTime);
 
     // 返回值 IPage<T>
     IPage<Dept> selectedPage = deptMapper.selectPage(iPage, lqw);

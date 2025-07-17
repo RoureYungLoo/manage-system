@@ -17,15 +17,21 @@ const dialogVisible = reactive({
 
 const title = ref("添加部门")
 
-/* 模版引用 */
-const formRef = useTemplateRef("formRef");
-
 /* 表单数据 */
 const formData = reactive({
   id: null,
   name: null,
   pageNo: 1,
   pageSize: 5
+})
+
+/* 模版引用 */
+const deptFormRef = useTemplateRef("deptFormRef");
+
+/* 新增/修改 */
+const deptForm = reactive({
+  id: null,
+  name: null
 })
 
 /* 表单校验规则 */
@@ -84,14 +90,14 @@ function clearFormData() {
 /* 确认 */
 const onSubmit = async () => {
   /* 校验表单 */
-  console.log("formRef", formRef.value)
-  await formRef.value.validate(async (valid, fields) => {
+  console.log("formRef", deptFormRef.value)
+  await deptFormRef.value.validate(async (valid, fields) => {
     if (valid) {
-      let res, optype = formData.id === null ? "添加" : "编辑"
-      if (formData.id) {
-        res = await deptService.updateById(formData);
-      } else if (formData.id === null) {
-        res = await deptService.save(formData);
+      let res, optype = deptForm.id === null ? "添加" : "编辑"
+      if (deptForm.id) {
+        res = await deptService.updateById(deptForm);
+      } else if (deptForm.id === null) {
+        res = await deptService.save(deptForm);
       }
       if (res.code === 1) {
         ElMessage({
@@ -134,7 +140,7 @@ const handleDelete = (deptId) => {
     initData()
   }).catch(() => {
     /* 用户取消 */
-    ElMessage.info("用户取消")
+    // ElMessage.info("用户取消")
   })
 }
 
@@ -149,9 +155,8 @@ const handleEdit = async (deptId) => {
   dialogVisible.saveOrEdit = true
   title.value = "编辑部门"
   const deptById = await deptService.findById(deptId);
-  console.log(deptById)
-  formData.id = deptById.data.id
-  formData.name = deptById.data.name
+  deptForm.id = deptById.data.id
+  deptForm.name = deptById.data.name
 }
 
 /* 翻页 */
@@ -171,7 +176,9 @@ onMounted(() => {
 
 /* 监听表单响应式状态 */
 watch(formData, () => {
-  initData()
+  if (!dialogVisible.saveOrEdit) {
+    initData()
+  }
 }, {deep: true})
 </script>
 
@@ -184,7 +191,8 @@ watch(formData, () => {
           <el-input type="text" placeholder="输入部门编号" v-model="formData.id" @keyup.enter="handleIdUp" clearable/>
         </el-form-item>
         <el-form-item label="部门名称" label-width="80">
-          <el-input type="text" placeholder="输入部门名称" v-model="formData.name" @keyup.enter="handleNameUp" clearable/>
+          <el-input type="text" placeholder="输入部门名称" v-model="formData.name" @keyup.enter="handleNameUp"
+                    clearable/>
         </el-form-item>
         <el-form-item>
           <el-button @click="handleQuery" type="primary">查询</el-button>
@@ -224,10 +232,10 @@ watch(formData, () => {
   />
 
   <!-- 添加/编辑部门 -->
-  <el-dialog v-model="dialogVisible.saveOrEdit" :title="title" width="500" :show-close="false">
-    <el-form :model="formData" :rules="rules" ref="formRef">
+  <el-dialog v-model="dialogVisible.saveOrEdit" :title="title" width="500" :show-close="false" align-center>
+    <el-form :model="deptForm" :rules="rules" ref="deptFormRef">
       <el-form-item label="部门名称" prop="name">
-        <el-input type="text" v-model="formData.name"/>
+        <el-input type="text" v-model="deptForm.name"/>
       </el-form-item>
     </el-form>
     <template #footer>

@@ -63,19 +63,6 @@ public class DeptController {
     return result;
   }
 
-  /* 使用 PageHelper 进行分页查询 */
-  @GetMapping("/page2")
-  public Result findPage2(Integer pageNo, Integer pageSize) {
-    Result result = null;
-    List<Dept> depts = deptService.findPage2(pageNo, pageSize);
-    if (Objects.isNull(depts) || depts.isEmpty()) {
-      result = Result.fail();
-    } else {
-      result = Result.success(depts);
-    }
-    return result;
-  }
-
   @GetMapping("/page3")
   public Result findPage3(DeptDto deptDto) {
     PageResult<Dept> r = deptService.findPage3(deptDto);
@@ -85,15 +72,8 @@ public class DeptController {
   /* 查询单个 */
   @GetMapping("/{id}")
   public Result findById(@PathVariable("id") Long id) {
-    Result result = null;
     Dept dept = deptService.findById(id);
-    if (Objects.isNull(dept)) {
-      result = Result.fail();
-    }
-
-    result = Result.success(dept);
-
-    return result;
+    return Result.success(dept);
   }
 
   /* 删除单个 */

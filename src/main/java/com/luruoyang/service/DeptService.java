@@ -1,5 +1,6 @@
 package com.luruoyang.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.luruoyang.model.dto.DeptDto;
 import com.luruoyang.model.pojo.Dept;
 import com.luruoyang.utils.PageDto;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public interface DeptService {
+public interface DeptService extends IService<Dept> {
   List<Dept> findAll();
 
   boolean deleteById(Long id);
