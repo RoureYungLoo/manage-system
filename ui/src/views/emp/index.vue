@@ -9,19 +9,19 @@ import emp from "@/api/emp.js";
 
 /* 分页条件查询参数 */
 const formData = ref({
-  name: "",
+  name: null,
   gender: null,
-  begin: "",
-  end: "",
+  begin: null,
+  end: null,
   page: 1,
   pageSize: 10,
 })
 
 /* 分页条件查询 */
 const fetchData = () => {
-/*  const response = await empService.findPage(formData.value);
-  empData.data.records = response.data.rows
-  empData.data.total = response.data.total*/
+  /*  const response = await empService.findPage(formData.value);
+    empData.data.records = response.data.rows
+    empData.data.total = response.data.total*/
   empService.findPage(formData.value)
       .then((res) => {
         empData.data.records = res.data.rows
@@ -46,8 +46,8 @@ watchEffect(() => {
     formData.value.begin = datePicker.value[0]
     formData.value.end = datePicker.value[1]
   } else if (datePicker.value == null) {
-    formData.value.begin = ""
-    formData.value.end = ""
+    formData.value.begin = null
+    formData.value.end = null
   }
   // fetchData()
 })
@@ -82,10 +82,10 @@ const handleSelect = () => {
 /* 重置查询条件 */
 const handleReset = () => {
   formData.value = {
-    name: "",
+    name: null,
     gender: null,
-    begin: "",
-    end: "",
+    begin: null,
+    end: null,
     page: 1,
     pageSize: 10,
   }
@@ -167,14 +167,14 @@ const handleAdd = () => {
 /* 添加员工表单数据 */
 const empFormData = reactive({
   id: null,
-  image: "",
-  username: "",
-  name: "",
+  image: null,
+  username: null,
+  name: null,
   gender: null,
   job: null,
-  entryDate: "",
+  entryDate: null,
   deptId: null,
-  phone: "",
+  phone: null,
   salary: null,
   exprList: [
     // {
@@ -193,10 +193,10 @@ const empFormData = reactive({
 const addEmpExpr = () => {
   empFormData.exprList.push({
     id: null,
-    company: "",
-    job: "",
-    begin: "",
-    end: "",
+    company: null,
+    job: null,
+    begin: null,
+    end: null,
     dateRange: []
   })
   console.log(empFormData)
@@ -223,8 +223,8 @@ watchEffect(() => {
         expr.begin = expr.dateRange[0]
         expr.end = expr.dateRange[1]
       } else {
-        expr.begin = ""
-        expr.end = ""
+        expr.begin = null
+        expr.end = null
       }
     })
   }
@@ -286,14 +286,14 @@ const handleSubmit = () => {
 /* 取消 */
 const handleCancel = () => {
   dialogVisible.value = false
-  empFormData.image = ""
-  empFormData.username = ""
-  empFormData.name = ""
+  empFormData.image = null
+  empFormData.username = null
+  empFormData.name = null
   empFormData.gender = null
   empFormData.job = null
-  empFormData.entryDate = ""
+  empFormData.entryDate = null
   empFormData.deptId = null
-  empFormData.phone = ""
+  empFormData.phone = null
   empFormData.salary = null
   empFormData.exprList = []
 }
@@ -414,7 +414,7 @@ onMounted(async () => {
   <el-row>
     <el-form inline>
       <el-form-item label="姓名" label-width="40">
-        <el-input type="text" v-model="formData.name" style="width: 200px" clearable/>
+        <el-input type="text" v-model="formData.name" style="width: 200px" clearable placeholder="员工姓名"/>
       </el-form-item>
       <el-form-item label="性别" label-width="40">
         <el-select

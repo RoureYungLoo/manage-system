@@ -1,15 +1,16 @@
 package com.luruoyang.service;
 
-import com.luruoyang.model.dto.ClassQueryParam;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.luruoyang.model.dto.ClazzQueryParam;
 import com.luruoyang.model.pojo.Clazz;
 import com.luruoyang.utils.PageResult;
 
 import java.util.List;
 
 
-public interface ClassService {
-  PageResult<Clazz> findPage(ClassQueryParam classParam);
-  PageResult<Clazz> findPage2(ClassQueryParam classParam);
+public interface ClazzService extends IService<Clazz> {
+  PageResult<Clazz> findPage(ClazzQueryParam classParam);
+  PageResult<Clazz> findPage2(ClazzQueryParam classParam);
 
   boolean deleteById(Integer id);
 

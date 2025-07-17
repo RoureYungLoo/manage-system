@@ -1,5 +1,6 @@
 package com.luruoyang.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luruoyang.model.dto.ExprDto;
 import com.luruoyang.mapper.EmpExprMapper;
 import com.luruoyang.model.pojo.EmpExpr;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class EmpExprServiceImpl implements EmpExprService {
+public class EmpExprServiceImpl extends ServiceImpl<EmpExprMapper,EmpExpr> implements EmpExprService {
 
   @Autowired
   private EmpExprMapper empEXprMapper;

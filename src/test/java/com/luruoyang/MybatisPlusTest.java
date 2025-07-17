@@ -1,26 +1,21 @@
 package com.luruoyang;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.luruoyang.mapper.DeptMapper;
 import com.luruoyang.mapper.EmpMapper;
 import com.luruoyang.model.dto.EmpDto;
-import com.luruoyang.model.pojo.Dept;
 import com.luruoyang.model.pojo.Emp;
-import com.luruoyang.service.IEmpService;
+import com.luruoyang.service.EmpService;
 import com.luruoyang.utils.PageResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -115,7 +110,7 @@ public class MybatisPlusTest {
   }
 
   @Autowired
-  private IEmpService iEmpService;
+  private EmpService empService;
 
   /* IService */
   @Test
@@ -129,10 +124,10 @@ public class MybatisPlusTest {
 //        .between(Emp::getSalary, 6000, 10000);
 
     /*分页查询*/
-    IPage<Emp> iPage = new Page<>(1,100);
+    IPage<Emp> iPage = new Page<>(1, 100);
 
-//    List<Emp> list = iEmpService.list(queryWrapper);
-    List<Emp> list = iEmpService.list(iPage, queryWrapper);
+//    List<Emp> list = empService.list(queryWrapper);
+    List<Emp> list = empService.list(iPage, queryWrapper);
     list.forEach(System.out::println);
   }
 

@@ -1,5 +1,6 @@
 package com.luruoyang.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.luruoyang.model.dto.ExprDto;
 import com.luruoyang.model.pojo.EmpExpr;
 import org.springframework.transaction.annotation.Propagation;
@@ -7,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface EmpExprService {
+public interface EmpExprService extends IService<EmpExpr> {
 
   boolean saveBatch(List<EmpExpr> exprList);
 

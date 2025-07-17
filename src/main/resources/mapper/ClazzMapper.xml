@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luruoyang.mapper.ClassMapper">
+<mapper namespace="com.luruoyang.mapper.ClazzMapper">
     <insert id="save" parameterType="com.luruoyang.model.pojo.Clazz">
         insert into tb_clazz(id, name, room, begin_date, end_date, master_id, subject, create_time, update_time, status)
         VALUES (null,
@@ -63,7 +63,7 @@
         <result column="ename" property="masterName"/>
         <result column="total" property="total"/>
     </resultMap>
-    <select id="findPage" resultMap="clazzMap" parameterType="com.luruoyang.model.dto.ClassQueryParam">
+    <select id="findPage" resultMap="clazzMap" parameterType="com.luruoyang.model.dto.ClazzQueryParam">
         select
         c.id cid,
         c.name cname,
@@ -78,14 +78,14 @@
         e.name ename
         from tb_clazz c left join tb_emp e on c.master_id = e.id
         <where>
-            <if test="classParam.name!=null and classParam.name!=''">
-                and c.name like concat('%',#{classParam.name},'%')
+            <if test="clazzParam.name!=null and clazzParam.name!=''">
+                and c.name like concat('%',#{clazzParam.name},'%')
             </if>
-            <if test="classParam.begin!=null">
-                and c.end_date <![CDATA[ >= ]]> #{classParam.begin}
+            <if test="clazzParam.begin!=null">
+                and c.end_date <![CDATA[ >= ]]> #{clazzParam.begin}
             </if>
-            <if test="classParam.end!=null ">
-                and c.end_date <![CDATA[ <= ]]> #{classParam.end}
+            <if test="clazzParam.end!=null ">
+                and c.end_date <![CDATA[ <= ]]> #{clazzParam.end}
             </if>
         </where>
         # -- 手动处理自动分页, 符合条件的记录数需要单独统计
@@ -118,19 +118,19 @@
         select count(*)
         from tb_clazz
     </select>
-    <select id="findMatchCount" resultType="java.lang.Long" parameterType="com.luruoyang.model.dto.ClassQueryParam">
+    <select id="findMatchCount" resultType="java.lang.Long" parameterType="com.luruoyang.model.dto.ClazzQueryParam">
         select
         count(*) total
         from tb_clazz c left join tb_emp e on c.master_id = e.id
         <where>
-            <if test="classParam.name!=null and classParam.name!=''">
-                and c.name like concat('%',#{classParam.name},'%')
+            <if test="clazzParam.name!=null and clazzParam.name!=''">
+                and c.name like concat('%',#{clazzParam.name},'%')
             </if>
-            <if test="classParam.begin!=null">
-                and c.end_date <![CDATA[ >= ]]> #{classParam.begin}
+            <if test="clazzParam.begin!=null">
+                and c.end_date <![CDATA[ >= ]]> #{clazzParam.begin}
             </if>
-            <if test="classParam.end!=null ">
-                and c.end_date <![CDATA[ <= ]]> #{classParam.end}
+            <if test="clazzParam.end!=null ">
+                and c.end_date <![CDATA[ <= ]]> #{clazzParam.end}
             </if>
         </where>
     </select>

@@ -142,10 +142,9 @@ public class DeptServiceImpl implements DeptService {
     IPage<Dept> selectedPage = deptMapper.selectPage(iPage, lqw);
 
     // 返回值 List<T>
-    List<Dept> deptList = deptMapper.selectList(iPage, lqw);
-    // return PageResult.getResult(selectedPage.getRecords(), selectedPage.getTotal());
-
-    return PageResult.getResult(deptList, (long) deptList.size());
+    // List<Dept> deptList = deptMapper.selectList(iPage, lqw);
+    return PageResult.getResult(selectedPage.getRecords(), selectedPage.getTotal());
+    // return PageResult.getResult(deptList, (long) deptList.size());
   }
 
   @Override

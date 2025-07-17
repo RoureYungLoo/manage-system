@@ -1,5 +1,6 @@
 package com.luruoyang.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
+@TableName(value = "tb_empexpr")
 public class EmpExpr {
   private Long id;
   private String company;

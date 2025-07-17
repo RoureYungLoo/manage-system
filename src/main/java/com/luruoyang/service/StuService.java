@@ -1,5 +1,6 @@
 package com.luruoyang.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.luruoyang.model.dto.StuDegreeDto;
 import com.luruoyang.model.dto.StuPageParam;
 import com.luruoyang.model.pojo.Stu;
@@ -8,7 +9,7 @@ import com.luruoyang.utils.PageResult;
 import java.util.List;
 import java.util.Map;
 
-public interface StuService {
+public interface StuService extends IService<Stu> {
   PageResult<Stu> findPage(StuPageParam stuParam);
 
   boolean deleteBatch(List<Long> ids);

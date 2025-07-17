@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
-
 @RestController
 @RequestMapping("/emps")
 public class EmpController {
@@ -29,7 +27,8 @@ public class EmpController {
   @PostMapping
   @LogOperation
   public Result save(@RequestBody Emp emp) throws Exception {
-    if (empService.save(emp)) {
+    // if (empService.save(emp)) {
+    if (empService.saveEmp(emp)) {
       return Result.success();
     } else {
       return Result.fail();
@@ -98,7 +97,8 @@ public class EmpController {
   public Result getEmpPage(EmpPageParam empPageParam) throws Exception {
     logger.info("员工分页查询参数 {}", empPageParam);
     // PageResult<Emp> pageResult = empService.getEmpPage(empPageParam);
-    PageResult<Emp> pageResult = empService.getEmpUsePageHelper(empPageParam);
+    // PageResult<Emp> pageResult = empService.getEmpUsePageHelper(empPageParam);
+    PageResult<Emp> pageResult = empService.getEmpUseMybatisPlusPaginationInterceptor(empPageParam);
     return Result.success(pageResult);
   }
 

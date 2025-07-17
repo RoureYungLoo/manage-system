@@ -25,7 +25,7 @@ const formData = reactive({
   id: null,
   name: null,
   pageNo: 1,
-  pageSize: 10
+  pageSize: 5
 })
 
 /* 表单校验规则 */

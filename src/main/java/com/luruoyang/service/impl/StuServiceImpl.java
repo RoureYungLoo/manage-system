@@ -2,38 +2,61 @@ package com.luruoyang.service.impl;
 
 //import com.github.pagehelper.Page;
 //import com.github.pagehelper.PageHelper;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luruoyang.model.dto.StuClazzCountDto;
 import com.luruoyang.model.dto.StuDegreeDto;
 import com.luruoyang.model.dto.StuPageParam;
 import com.luruoyang.mapper.StuMapper;
+import com.luruoyang.model.pojo.Clazz;
 import com.luruoyang.model.pojo.Stu;
+import com.luruoyang.service.ClazzService;
 import com.luruoyang.service.StuService;
 import com.luruoyang.utils.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
-public class StuServiceImpl implements StuService {
+public class StuServiceImpl extends ServiceImpl<StuMapper, Stu> implements StuService {
 
   @Autowired
   private StuMapper stuMapper;
 
+  @Autowired
+  private ClazzService clazzService;
+
   @Override
   public PageResult<Stu> findPage(StuPageParam stuParam) {
-    // PageHelper.startPage(stuParam.getPage(), stuParam.getPageSize());
-    // List<Stu> stuList = stuMapper.findPage(stuParam);
-    // Page<Stu> page = (Page<Stu>) stuList;
-    // PageResult<Stu> pr = PageResult.getResult(page.getResult(), page.getTotal());
-    // return pr;
-    return null;
+    String name = stuParam.getName();
+    Integer degree = stuParam.getDegree();
+    Integer clazzId = stuParam.getClazzId();
+
+    IPage<Stu> page = new Page<>(stuParam.getPage(), stuParam.getPageSize());
+    LambdaQueryWrapper<Stu> wrapper = Wrappers.lambdaQuery();
+    wrapper.like(StringUtils.hasText(name), Stu::getName, name)
+        .eq(Objects.nonNull(degree), Stu::getDegree, degree)
+        .eq(Objects.nonNull(clazzId), Stu::getClazzId, clazzId);
+
+    IPage<Stu> stuPage = stuMapper.selectPage(page, wrapper);
+    List<Stu> stuList = stuPage.getRecords();
+    stuList.forEach(stu -> {
+      Long tmp = stu.getClazzId();
+      Clazz clazz = clazzService.getById(tmp);
+      stu.setClazzName(clazz.getName());
+    });
+
+    return PageResult.getResult(stuList, stuPage.getTotal());
   }
 
   @Override

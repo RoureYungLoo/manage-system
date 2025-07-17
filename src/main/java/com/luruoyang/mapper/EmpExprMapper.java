@@ -1,5 +1,6 @@
 package com.luruoyang.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luruoyang.model.dto.ExprDto;
 import com.luruoyang.model.pojo.EmpExpr;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface EmpExprMapper {
+public interface EmpExprMapper extends BaseMapper<EmpExpr> {
 
   int saveBatch(List<EmpExpr> exprList);
 

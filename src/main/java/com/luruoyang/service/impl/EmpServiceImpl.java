@@ -5,6 +5,12 @@ import com.alibaba.fastjson.JSON;
 //import com.github.pagehelper.Page;
 //import com.github.pagehelper.PageHelper;
 //import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luruoyang.enums.LoginEnum;
 import com.luruoyang.enums.OptRes;
 import com.luruoyang.enums.OptType;
@@ -15,21 +21,22 @@ import com.luruoyang.model.pojo.Emp;
 import com.luruoyang.model.pojo.EmpExpr;
 import com.luruoyang.model.pojo.LogEmp;
 import com.luruoyang.model.vo.LoginVo;
-import com.luruoyang.service.EmpExprService;
-import com.luruoyang.service.EmpService;
-import com.luruoyang.service.LogEmpService;
+import com.luruoyang.service.*;
 import com.luruoyang.utils.JjwtUtils;
 import com.luruoyang.utils.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class EmpServiceImpl implements EmpService {
+public class EmpServiceImpl extends ServiceImpl<EmpMapper, Emp> implements EmpService {
 
   @Autowired
   private EmpMapper empMapper;
@@ -156,7 +163,7 @@ public class EmpServiceImpl implements EmpService {
     } catch (Exception e) {
       /* 操作失败 */
       logEmpEntry.setOptRes(OptRes.failed.getCode());
-      throw e;
+      throw new RuntimeException(e.getMessage());
     } finally {
       /* save the log */
       logEmpEntry.setPostData(JSON.toJSONString(emp));
@@ -273,6 +280,42 @@ public class EmpServiceImpl implements EmpService {
     return null;
   }
 
+  /**
+   * 条件分页查询
+   *
+   * @param param 参数
+   * @return PageResult<T>
+   */
+  @Override
+  public PageResult<Emp> getEmpUseMybatisPlusPaginationInterceptor(EmpPageParam param) {
+    String name = param.getName();
+    Integer gender = param.getGender();
+    LocalDate begin = param.getBegin();
+    LocalDate end = param.getEnd();
+    Integer pageNo = param.getPage();
+    Integer pageSize = param.getPageSize();
+
+    IPage<Emp> page = new Page<>(pageNo, pageSize);
+    LambdaQueryWrapper<Emp> wrapper = new LambdaQueryWrapper<>();
+    wrapper.like(StringUtils.hasText(name), Emp::getName, name)
+        .eq(Objects.nonNull(gender), Emp::getGender, gender)
+        .between(begin != null && end != null, Emp::getEntryDate, begin, end);
+
+    // 查询员工表
+    IPage<Emp> empPage = empMapper.selectPage(page, wrapper);
+    List<Emp> empList = empPage.getRecords();
+
+    // 查询员工工作经历
+    for (Emp emp : empList) {
+      LambdaQueryWrapper<EmpExpr> lqw = Wrappers.<EmpExpr>lambdaQuery().eq(EmpExpr::getTbEmpId, emp.getId());
+      List<EmpExpr> empExprList = exprService.list(lqw);
+      emp.setExprList(empExprList);
+    }
+
+    PageResult<Emp> pageResult = PageResult.getResult(empList, page.getTotal());
+    return pageResult;
+  }
+
   @Override
   public List<EmpGenderDto> genderStatistics() {
     List<EmpGenderDto> empGenderDtos = empMapper.genderStatistics();
@@ -348,6 +391,55 @@ public class EmpServiceImpl implements EmpService {
     // PageResult<Emp> pageResult = PageResult.getResult(empPage.getResult(), empPage.getTotal());
     // return pageResult;
     return null;
+  }
+
+  @Override
+  public boolean saveEmp(Emp emp) {
+    /* 准备记录日志 */
+    LogEmp logEmpEntry = LogEmp.builder()
+        .preData("")
+        .postData("")
+        .optTime(LocalDateTime.now())
+        .optType(OptType.insert.getCode())
+        .optRes(OptRes.success.getCode()) // 假定操作成功
+        .build();
+
+    try {
+      String password = emp.getPassword();
+      if (Objects.isNull(password) || password.isEmpty()) {
+        emp.setPassword("123456");
+      }
+      emp.setCreateTime(LocalDateTime.now());
+      emp.setUpdateTime(LocalDateTime.now());
+
+      // empMapper.insert(emp);
+      // save(emp);
+      this.save(emp);
+
+      /* set expr empId */
+      List<EmpExpr> exprList = emp.getExprList();
+      if (!exprList.isEmpty()) {
+        for (EmpExpr empExpr : exprList) {
+          empExpr.setTbEmpId(emp.getId());
+        }
+        /* insert employ experience */
+        exprService.saveBatch(exprList);
+      }
+
+      if (emp.getSalary() <= 3000) {
+        // throw new Exception(""); // 编译期异常
+        throw new ClientSideException("工资太低了, 狗都不干");
+      }
+    } catch (Exception e) {
+      /* 操作失败 */
+      logEmpEntry.setOptRes(OptRes.failed.getCode());
+      throw e;
+    } finally {
+      /* save the log */
+      logEmpEntry.setPostData(JSON.toJSONString(emp));
+      logEmpService.saveLog(logEmpEntry);
+    }
+    return true;
   }
 
 }

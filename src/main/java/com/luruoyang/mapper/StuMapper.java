@@ -1,5 +1,6 @@
 package com.luruoyang.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luruoyang.model.dto.StuClazzCountDto;
 import com.luruoyang.model.dto.StuDegreeDto;
 import com.luruoyang.model.dto.StuPageParam;
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface StuMapper {
+public interface StuMapper extends BaseMapper<Stu> {
   List<Stu> findPage(StuPageParam stuParam);
 
   Integer deleteBatch(List<Long> ids);

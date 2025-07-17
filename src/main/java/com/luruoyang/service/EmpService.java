@@ -1,5 +1,6 @@
 package com.luruoyang.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.luruoyang.model.dto.*;
 import com.luruoyang.model.pojo.Emp;
 import com.luruoyang.model.vo.LoginVo;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-public interface EmpService {
+public interface EmpService extends IService<Emp> {
   public List<Emp> findAll() throws Exception;
 
   @Transactional(rollbackFor = Exception.class)
@@ -21,7 +22,7 @@ public interface EmpService {
 
   //  @Transactional
   @Transactional(rollbackFor = {Exception.class})
-  boolean save(Emp emp) throws Exception;
+  boolean save(Emp emp);
 
   @Transactional
   boolean updateEmpById(Emp emp);
@@ -31,6 +32,8 @@ public interface EmpService {
   PageResult<Emp> getEmpPage(EmpPageParam empPageParam);
 
   PageResult<Emp> getEmpUsePageHelper(EmpPageParam empPageParam) throws Exception;
+
+  PageResult<Emp> getEmpUseMybatisPlusPaginationInterceptor(EmpPageParam empPageParam) throws Exception;
 
   List<EmpGenderDto> genderStatistics();
 
@@ -42,4 +45,5 @@ public interface EmpService {
 
   LoginVo login(LoginInfoDto loginInfo);
 
+  boolean saveEmp(Emp emp);
 }

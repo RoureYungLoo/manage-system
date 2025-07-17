@@ -1,5 +1,6 @@
 package com.luruoyang.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.luruoyang.enums.ClazzStatus;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Clazz {
   private LocalDateTime updateTime;
   private String status;
 
+  @TableField(exist = false)
   private String masterName;
 
   /* 记录总数 */
