@@ -61,9 +61,7 @@ public class StuController {
   @GetMapping("/{id}")
   public Result findStuById(@PathVariable Long id) {
     Stu stu = stuService.findStuById(id);
-
     return stu != null ? Result.success(stu) : Result.fail();
-
   }
 
   @PutMapping

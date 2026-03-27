@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration // 标识这个类是配置类
+//@Configuration // 标识这个类是配置类
 public class WebMvcConfig implements WebMvcConfigurer {
 
-  @Autowired
+//  @Autowired
   private LoginInterceptor loginInterceptor;
 
 //  @Autowired

@@ -10,22 +10,25 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * @author luruoyang
+ */
 @Mapper
 public interface StuMapper extends BaseMapper<Stu> {
-  List<Stu> findPage(StuPageParam stuParam);
+  // List<Stu> findPage(StuPageParam stuParam);
 
-  Integer deleteBatch(List<Long> ids);
+  // Integer deleteBatch(List<Long> ids);
 
-  int save(Stu stu);
+  // int save(Stu stu);
 
-  Stu findStuById(Long id);
+  // Stu findStuById(Long id);
 
-  int updateById(Stu stu);
+  // int updateById(Stu stu);
 
-  boolean violation(@Param("id") Long id,@Param("violationScore") Integer score);
+  // boolean violation(@Param("id") Long id,@Param("violationScore") Integer score);
 
-  List<StuDegreeDto> degreeStatistic();
+  // List<StuDegreeDto> degreeStatistic();
 
-  List<StuClazzCountDto> groupByClazz();
+   List<StuClazzCountDto> groupByClazz();
 
 }

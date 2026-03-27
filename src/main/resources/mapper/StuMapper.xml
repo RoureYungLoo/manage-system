@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luruoyang.mapper.StuMapper">
 
-    <resultMap id="stuMap" type="com.luruoyang.model.pojo.Stu">
+    <!--<resultMap id="stuMap" type="com.luruoyang.model.pojo.Stu">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="no" column="no"/>
@@ -148,6 +148,7 @@
         FROM tb_stu
         where id = #{id}
     </select>
+    -->
     <select id="groupByClazz" resultType="com.luruoyang.model.dto.StuClazzCountDto">
         select c.name as 'clazzName', count(s.clazz_id) as 'clazzCount'
         from tb_stu s
